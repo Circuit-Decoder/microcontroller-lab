@@ -81,6 +81,10 @@ Every program here is exactly the code printed in the book. Each one was compile
 | 22 | [QR Code Generator](P22_QR_Code_Generator) | Type text, get a QR code any phone can scan |
 | 23 | [Bluetooth Presentation Remote](P23_Presentation_Remote) | Change PowerPoint slides from your device |
 
+## Challenge solutions
+
+Every project ends with **Challenge Yourself** tasks. Worked answers for all of them — 93 sketches, each one checked to compile for the ESP32 — are in the [**solutions**](solutions) folder. Try each challenge first, then compare.
+
 ## Safety note
 
 Projects 18, 21 and 22 need a Wi-Fi password or a Telegram bot token. Type yours only on your own computer. **Never share code that contains your real password or token.**
