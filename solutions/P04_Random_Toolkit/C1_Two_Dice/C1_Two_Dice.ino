@@ -64,6 +64,7 @@ void rollTwoDice() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Two Dice:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.print(die1);
   display.print(" + ");
@@ -93,6 +94,7 @@ void rollDice() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Dice Roll:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(3);
   display.println(result);
   display.display();
@@ -104,6 +106,7 @@ void pickLuckyNumber() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Lucky Number:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(3);
   display.println(result);
   display.display();
@@ -138,6 +141,7 @@ void generatePassword() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Random Password:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(password);
   display.display();

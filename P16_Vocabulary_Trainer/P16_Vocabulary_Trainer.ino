@@ -3,11 +3,11 @@
 #include <Adafruit_SSD1306.h>
 #include <Keypad.h>
 #include <EEPROM.h>
- 
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
- 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -19,7 +19,7 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {13, 12, 14, 27};
 byte colPins[COLS] = {26, 25, 33, 32};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
- 
+
 // ---------- NEW: A STRUCT FOR ONE FLASHCARD ----------
 struct Flashcard {
   String word;
@@ -29,7 +29,7 @@ struct Flashcard {
   String choiceD;
   char correctChoice;     // 'A', 'B', 'C' or 'D'
 };
- 
+
 // An array of structs: 8 flashcards. Edit them with your own words!
 Flashcard cards[8] = {
   {"ABUNDANT", "Very little", "Plenty", "Expensive", "Broken", 'B'},
@@ -42,13 +42,13 @@ Flashcard cards[8] = {
   {"ACCURATE", "Too late", "Very large", "Noisy", "Exactly right", 'D'}
 };
 const int TOTAL_CARDS = 8;
- 
+
 int currentCard = 0;
 int score = 0;
 int bestScore = 0;            // loaded from EEPROM
 bool showingResult = false;
 bool wasCorrect = false;
- 
+
 void setup() {
   Serial.begin(115200);
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -61,11 +61,11 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
   showQuestion();
 }
- 
+
 void loop() {
   char key = keypad.getKey();
   if (!key) return;
- 
+
   if (showingResult) {          // any key: next card
     goToNextCard();
     return;
@@ -74,7 +74,7 @@ void loop() {
     checkAnswer(key);
   }
 }
- 
+
 // Returns the text of choice A, B, C or D of a card
 String choiceText(Flashcard card, char letter) {
   if (letter == 'A') return card.choiceA;
@@ -82,7 +82,7 @@ String choiceText(Flashcard card, char letter) {
   if (letter == 'C') return card.choiceC;
   return card.choiceD;
 }
- 
+
 void checkAnswer(char chosen) {
   wasCorrect = (chosen == cards[currentCard].correctChoice);
   if (wasCorrect) {
@@ -91,7 +91,7 @@ void checkAnswer(char chosen) {
   showingResult = true;
   showResultScreen();
 }
- 
+
 void goToNextCard() {
   currentCard++;
   showingResult = false;
@@ -103,7 +103,7 @@ void goToNextCard() {
   }
   showQuestion();
 }
- 
+
 void showQuestion() {
   Flashcard card = cards[currentCard];   // a copy of the current card
   display.clearDisplay();
@@ -115,6 +115,7 @@ void showQuestion() {
   display.print(TOTAL_CARDS);
   display.print("   Best: ");
   display.println(bestScore);
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(card.word);
   display.setTextSize(1);
@@ -124,7 +125,7 @@ void showQuestion() {
   display.print("D:"); display.println(card.choiceD);
   display.display();
 }
- 
+
 void showResultScreen() {
   Flashcard card = cards[currentCard];
   display.clearDisplay();
@@ -148,7 +149,7 @@ void showResultScreen() {
   display.print("Any key = next card");
   display.display();
 }
- 
+
 void showFinalScore() {
   bool newBest = score > bestScore;
   if (newBest) {                      // save the new best score for ever

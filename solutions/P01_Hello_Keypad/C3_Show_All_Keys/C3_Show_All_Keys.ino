@@ -62,6 +62,7 @@ void loop() {
 
     display.setTextSize(1);     // small label
     display.println("You typed:");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);     // size 2: 10 keys fit on one line
     display.println(typed);
     display.display();          // update the screen

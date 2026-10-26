@@ -117,6 +117,7 @@ void showQuestion() {
   display.print(TOTAL_CARDS);
   display.print("   Best: ");
   display.println(bestScore);
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(card.word);
   display.setTextSize(1);

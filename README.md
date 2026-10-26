@@ -33,6 +33,8 @@ Every program here is exactly the code printed in the book. Each one was compile
 |---|---|---|---|---|---|---|---|---|
 | ESP32 pin | 13 | 12 | 14 | 27 | 26 | 25 | 33 | 32 |
 
+**Two-colour screen?** Many 0.96" OLEDs (including ours) show the top 16 pixel rows (0–15) in yellow and the rest (16–63) in blue. The colour is fixed in the glass. All code here keeps titles in the yellow strip and starts big text at row 16 (`display.setCursor(0, 16);`), so no letter is cut in half. On an all-white or all-blue screen, everything works the same.
+
 ## The projects
 
 ### Tier 1 — First steps

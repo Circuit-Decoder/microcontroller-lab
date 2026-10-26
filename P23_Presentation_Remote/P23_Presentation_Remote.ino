@@ -3,11 +3,11 @@
 #include <Adafruit_SSD1306.h>
 #include <Keypad.h>
 #include "BluetoothKeys.h"      // NEW: our Bluetooth keyboard tab
- 
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
- 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -19,10 +19,10 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {13, 12, 14, 27};
 byte colPins[COLS] = {26, 25, 33, 32};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
- 
+
 // The name the computer will see in its Bluetooth list
 const char* REMOTE_NAME = "CD Slide Remote";
- 
+
 int slide = 1;                  // which slide we think is showing
 bool showRunning = false;
 unsigned long showStart = 0;    // when the slideshow started
@@ -30,7 +30,7 @@ bool typingNumber = false;      // C = go to a slide number
 String slideNumber = "";
 bool wasConnected = false;
 unsigned long lastDraw = 0;
- 
+
 void setup() {
   Serial.begin(115200);
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -41,26 +41,26 @@ void setup() {
   btBegin(REMOTE_NAME);         // start Bluetooth: "I am a keyboard!"
   showScreen();
 }
- 
+
 void loop() {
   bool connected = btConnected();
   if (connected != wasConnected) {          // connected or disconnected just now
     wasConnected = connected;
     showScreen();
   }
- 
+
   char key = keypad.getKey();
   if (key && connected) {
     if (typingNumber) handleNumberKey(key);
     else handleKey(key);
     showScreen();
   }
- 
+
   if (showRunning && millis() - lastDraw >= 1000) {   // update the timer
     showScreen();
   }
 }
- 
+
 // ---------- Normal keys ----------
 void handleKey(char key) {
   if (key == '#') {                          // next slide
@@ -89,7 +89,7 @@ void handleKey(char key) {
     showRunning = false;
   }
 }
- 
+
 // ---------- After C: type a slide number, then # ----------
 void handleNumberKey(char key) {
   if (key >= '0' && key <= '9' && slideNumber.length() < 3) {
@@ -112,7 +112,7 @@ void handleNumberKey(char key) {
     typingNumber = false;
   }
 }
- 
+
 // ---------- Screen ----------
 void showScreen() {
   lastDraw = millis();
@@ -122,7 +122,7 @@ void showScreen() {
   display.print("SLIDE REMOTE");
   display.setCursor(104, 0);
   display.print(btConnected() ? "BT" : "--");
- 
+
   if (!btConnected()) {
     display.setCursor(0, 16);
     display.println("Not connected.");
@@ -141,11 +141,11 @@ void showScreen() {
     display.print("#=Go  *=Del  D=Back");
   }
   else {
-    display.setCursor(0, 14);
+    display.setCursor(0, 16);                // row 16: below the yellow strip
     display.setTextSize(2);
     display.print("Slide ");
     display.println(slide);
- 
+
     if (showRunning) {                       // the presentation timer
       unsigned long seconds = (millis() - showStart) / 1000;
       char timeText[6];

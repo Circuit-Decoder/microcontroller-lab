@@ -250,6 +250,7 @@ void showNewPINScreen() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("New PIN (4-7 digits):");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(newPIN);
   display.setTextSize(1);

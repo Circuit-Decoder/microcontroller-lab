@@ -99,17 +99,20 @@ void showScreen() {
 
   if (stage == 1) {
     display.println("Enter bill total:");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(currentInput);
   }
   else if (stage == 2) {
     display.println("Enter # of people:");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(currentInput);
   }
   else if (stage == 3) {
     display.println("Tip: A=5 B=10 C=15%");
     display.println("or type it, then #");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(currentInput);
   }

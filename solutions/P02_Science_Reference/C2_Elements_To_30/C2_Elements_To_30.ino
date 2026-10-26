@@ -74,6 +74,7 @@ void showEntryScreen() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Enter atomic #:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(enteredNumber);
   display.setTextSize(1);
@@ -91,6 +92,7 @@ void lookupElement() {
   if (number >= 1 && number <= 30) {   // CHALLENGE 2: 20 -> 30
     display.print("Atomic #: ");
     display.println(number);
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(elementNames[number]);
     display.setTextSize(1);

@@ -122,6 +122,7 @@ void showQuestion() {
   display.print(TOTAL_CARDS);
   display.print("   Best: ");
   display.println(bestScore);
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   // CHALLENGE 4: show the MEANING, and the player types the word
   display.println("Which word means:");
   display.println(choiceText(card, card.correctChoice));
@@ -152,7 +153,6 @@ void showResultScreen() {
   display.println(choiceText(card, card.correctChoice));
   display.print("You typed: ");
   display.println(mtText);
-  display.println("");
   display.print("Score: ");
   display.println(score);
   display.print("Any key = next card");

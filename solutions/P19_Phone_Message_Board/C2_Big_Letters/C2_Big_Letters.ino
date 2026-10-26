@@ -150,7 +150,10 @@ void showScreen() {
     display.print(messageCount);
     display.println(":");
     // CHALLENGE 2: short messages in big letters
-    if (lastMessage.length() < 10) display.setTextSize(2);
+    if (lastMessage.length() < 10) {
+      display.setCursor(0, 16);   // row 16: below the yellow strip
+      display.setTextSize(2);
+    }
     display.println(lastMessage);
     display.setTextSize(1);
     display.setCursor(0, 56);

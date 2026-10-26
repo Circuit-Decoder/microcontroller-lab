@@ -2,11 +2,11 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Keypad.h>
- 
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
- 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -18,7 +18,7 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {13, 12, 14, 27};
 byte colPins[COLS] = {26, 25, 33, 32};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
- 
+
 // ---------- NEW: PERIODIC TABLE DATA ----------
 // Place 0 is empty ("") because no element has atomic number 0.
 // Same idea as Part A: the two lists are lined up by position.
@@ -34,9 +34,9 @@ String elementSymbols[21] = {
   "Na", "Mg", "Al", "Si", "P",
   "S", "Cl", "Ar", "K", "Ca"
 };
- 
+
 String enteredNumber = "";   // the digits typed so far
- 
+
 void setup() {
   Serial.begin(115200);
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -46,11 +46,11 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
   showEntryScreen();
 }
- 
+
 void loop() {
   char key = keypad.getKey();
   if (!key) return;
- 
+
   if (key == '#') {                         // finished typing: look it up
     lookupElement();
   }
@@ -64,29 +64,31 @@ void loop() {
   }
   // Letter keys (A-D) are ignored in this project
 }
- 
+
 void showEntryScreen() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Enter atomic #:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(enteredNumber);
   display.setTextSize(1);
   display.println("# = Look up * = Clear");
   display.display();
 }
- 
+
 void lookupElement() {
   int number = enteredNumber.toInt();   // text "17" becomes number 17
- 
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
- 
+
   if (number >= 1 && number <= 20) {
     display.print("Atomic #: ");
     display.println(number);
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(elementNames[number]);
     display.setTextSize(1);

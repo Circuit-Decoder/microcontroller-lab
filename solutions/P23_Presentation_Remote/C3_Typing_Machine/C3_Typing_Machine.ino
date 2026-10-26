@@ -95,7 +95,7 @@ void showScreen() {
   display.print("BT KEYBOARD");
   display.setCursor(104, 0);
   display.print(btConnected() ? "BT" : "--");
-  display.setCursor(0, 12);
+  display.setCursor(0, 16);
   if (!btConnected()) {
     display.println("Pair the laptop with:");
     display.println(REMOTE_NAME);

@@ -153,7 +153,7 @@ void showScreen() {
     display.print("#=Go  *=Del  D=Back");
   }
   else {
-    display.setCursor(0, 14);
+    display.setCursor(0, 16);                // row 16: below the yellow strip
     display.setTextSize(2);
     display.print("Slide ");
     display.println(slide);

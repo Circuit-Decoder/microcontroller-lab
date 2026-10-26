@@ -4,11 +4,11 @@
 #include <Keypad.h>
 #include <EEPROM.h>
 #include "MultiTap.h"         // the keyboard from Project 13 (second tab)
- 
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
- 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -20,21 +20,21 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {13, 12, 14, 27};
 byte colPins[COLS] = {26, 25, 33, 32};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
- 
+
 // ---------- NEW: CONTACT STORAGE LAYOUT ----------
 #define NAME_SLOT_SIZE 10
 #define NUMBER_SLOT_SIZE 15
 #define CONTACT_SLOT_SIZE (NAME_SLOT_SIZE + NUMBER_SLOT_SIZE)
 #define MAX_CONTACTS 5
 #define EEPROM_SIZE (CONTACT_SLOT_SIZE * MAX_CONTACTS)
- 
+
 // mode: 0 = menu, 1 = typing a new name, 2 = typing the number,
 //       3 = typing a name to search, 4 = showing the result
 int mode = 0;
 String currentInput = "";
 String tempName = "";
 int nextEmptySlot = 0;
- 
+
 void setup() {
   Serial.begin(115200);
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -47,27 +47,27 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
   showMenu();
 }
- 
+
 void loop() {
   char key = keypad.getKey();
- 
+
   if (mode == 1 || mode == 3) {      // typing a name: keyboard needs EVERY loop
     handleNameTyping(key);
     return;
   }
   if (!key) return;
- 
+
   if (key == 'D' && mode != 0) {     // D = cancel, back to the menu
     mode = 0;
     showMenu();
     return;
   }
- 
+
   if (mode == 0) handleMenu(key);
   else if (mode == 2) handleAddNumber(key);
   else if (mode == 4) { mode = 0; showMenu(); }
 }
- 
+
 void handleMenu(char key) {
   if (key == 'A') {                  // add a contact
     mtClear();
@@ -80,7 +80,7 @@ void handleMenu(char key) {
     showNameScreen();
   }
 }
- 
+
 // Used for both adding (mode 1) and searching (mode 3)
 void handleNameTyping(char key) {
   if (mtUpdate(key)) {
@@ -104,7 +104,7 @@ void handleNameTyping(char key) {
     showMenu();
   }
 }
- 
+
 void handleAddNumber(char key) {
   if (key == '#') {
     saveContact(tempName, currentInput);
@@ -122,7 +122,7 @@ void handleAddNumber(char key) {
     showAddNumberScreen();
   }
 }
- 
+
 void showSearchResult(String name) {
   String foundNumber = findContact(name);
   display.clearDisplay();
@@ -143,11 +143,11 @@ void showSearchResult(String name) {
   display.print("Any key = Menu");
   display.display();
 }
- 
+
 // ---------- EEPROM READ / WRITE HELPERS ----------
 void saveContact(String name, String number) {
   int slotStart = nextEmptySlot * CONTACT_SLOT_SIZE;
- 
+
   // Write the name, padded with '\0' up to NAME_SLOT_SIZE
   for (int i = 0; i < NAME_SLOT_SIZE; i++) {
     char c = (i < name.length()) ? name[i] : '\0';
@@ -162,7 +162,7 @@ void saveContact(String name, String number) {
   // move on; after the last slot, wrap around to slot 0
   nextEmptySlot = (nextEmptySlot + 1) % MAX_CONTACTS;
 }
- 
+
 String readNameFromSlot(int slot) {
   String name = "";
   int slotStart = slot * CONTACT_SLOT_SIZE;
@@ -173,7 +173,7 @@ String readNameFromSlot(int slot) {
   }
   return name;
 }
- 
+
 String readNumberFromSlot(int slot) {
   String number = "";
   int slotStart = slot * CONTACT_SLOT_SIZE;
@@ -184,7 +184,7 @@ String readNumberFromSlot(int slot) {
   }
   return number;
 }
- 
+
 // Linear search: check every slot, one by one
 String findContact(String searchName) {
   for (int slot = 0; slot < MAX_CONTACTS; slot++) {
@@ -195,7 +195,7 @@ String findContact(String searchName) {
   }
   return "";   // not found
 }
- 
+
 // A slot is "used" only if it holds a real phone number (digits only).
 // Old data left by other projects (like the diary) counts as empty.
 bool slotIsUsed(int slot) {
@@ -206,7 +206,7 @@ bool slotIsUsed(int slot) {
   }
   return true;
 }
- 
+
 // After a restart: find the first slot that is not used yet
 int findEmptySlot() {
   for (int slot = 0; slot < MAX_CONTACTS; slot++) {
@@ -214,7 +214,7 @@ int findEmptySlot() {
   }
   return 0;    // all full: start again at slot 0
 }
- 
+
 // ---------- SCREENS ----------
 void showMenu() {
   display.clearDisplay();
@@ -226,13 +226,14 @@ void showMenu() {
   display.println("B: Search by name");
   display.display();
 }
- 
+
 void showNameScreen() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
   if (mode == 1) display.println("New contact - name:");
   else display.println("Search - name:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.print(mtPreview());
   display.println("_");
@@ -241,13 +242,14 @@ void showNameScreen() {
   display.print("#=OK *=Del D=Back");
   display.display();
 }
- 
+
 void showAddNumberScreen() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.print("Number for ");
   display.println(tempName);
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(currentInput);
   display.setTextSize(1);

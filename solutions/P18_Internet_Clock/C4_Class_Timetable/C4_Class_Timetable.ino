@@ -164,6 +164,7 @@ void showPeriod(struct tm &now) {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Now:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   if (current == -1) {
     display.println("Before");

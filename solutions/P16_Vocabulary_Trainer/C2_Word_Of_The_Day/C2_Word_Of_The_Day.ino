@@ -86,6 +86,7 @@ void showWordOfTheDay() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Word of the Day:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(card.word);
   display.setTextSize(1);
@@ -136,6 +137,7 @@ void showQuestion() {
   display.print(TOTAL_CARDS);
   display.print("   Best: ");
   display.println(bestScore);
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(card.word);
   display.setTextSize(1);

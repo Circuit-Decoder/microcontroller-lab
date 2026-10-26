@@ -2,11 +2,11 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Keypad.h>
- 
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
- 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -18,7 +18,7 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {13, 12, 14, 27};
 byte colPins[COLS] = {26, 25, 33, 32};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
- 
+
 void setup() {
   Serial.begin(115200);
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -28,15 +28,15 @@ void setup() {
   // "Seed" the random generator with a little electrical noise
   // from an unused pin, so the results are different every time.
   randomSeed(analogRead(34));
- 
+
   display.setTextColor(SSD1306_WHITE);
   showMenu();
 }
- 
+
 void loop() {
   char key = keypad.getKey();
   if (!key) return;
- 
+
   if (key == 'A') {
     rollDice();
   }
@@ -53,7 +53,7 @@ void loop() {
     showMenu();
   }
 }
- 
+
 void showMenu() {
   display.clearDisplay();
   display.setTextSize(1);
@@ -67,29 +67,31 @@ void showMenu() {
   display.println("* = Back to Menu");
   display.display();
 }
- 
+
 void rollDice() {
   int result = random(1, 7);     // 1 to 6 ("stops before max" rule!)
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Dice Roll:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(3);
   display.println(result);
   display.display();
 }
- 
+
 void pickLuckyNumber() {
   int result = random(1, 101);   // 1 to 100
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Lucky Number:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(3);
   display.println(result);
   display.display();
 }
- 
+
 void flipCoin() {
   int result = random(0, 2);     // 0 or 1
   display.clearDisplay();
@@ -102,23 +104,24 @@ void flipCoin() {
   }
   display.display();
 }
- 
+
 void generatePassword() {
   // Letters I and O, and numbers 0 and 1, are left out on purpose:
   // they are easy to confuse when you read them on a small screen.
   const char charset[] = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   String password = "";
   int charsetLength = 32;        // number of characters in charset
- 
+
   for (int i = 0; i < 6; i++) {
     int randomIndex = random(0, charsetLength);
     password += charset[randomIndex];
   }
- 
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Random Password:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(password);
   display.display();

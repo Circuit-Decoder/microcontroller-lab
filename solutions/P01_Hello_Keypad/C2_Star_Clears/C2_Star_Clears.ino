@@ -66,6 +66,7 @@ void loop() {
     display.setCursor(0, 0);
     display.setTextSize(1);     // small label
     display.println("You pressed:");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(4);     // make the key very big
     display.println(key);
     display.display();          // update the screen

@@ -138,6 +138,7 @@ void showScreen() {
     display.print("Hex number:");
     if (shift) display.print("  SHIFT");
     display.println("");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(currentInput);
     display.setTextSize(1);

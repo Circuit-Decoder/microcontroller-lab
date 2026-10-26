@@ -147,6 +147,7 @@ void showTypingScreen() {
   display.setTextSize(1);
   display.setCursor(0, 0);
   display.println("Target:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(targetSequence);
   display.setTextSize(1);

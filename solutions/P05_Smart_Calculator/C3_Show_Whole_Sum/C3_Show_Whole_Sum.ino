@@ -123,6 +123,7 @@ void showScreen() {
     display.print(" ");
     display.print(num2, 0);
     display.println(" =");
+    display.setCursor(0, 16);   // row 16: below the yellow strip
     display.setTextSize(2);
     display.println(calculateResult(), 2);
   }

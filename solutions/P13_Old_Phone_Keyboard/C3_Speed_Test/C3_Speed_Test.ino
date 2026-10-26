@@ -95,6 +95,7 @@ void showFinalMessage() {
   display.setCursor(0, 0);
   unsigned long ms = millis() - startTime;
   display.println("You typed:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(mtText);
   display.setTextSize(1);

@@ -250,6 +250,7 @@ void showNameScreen() {
   display.setCursor(0, 0);
   if (mode == 1) display.println("New contact - name:");
   else display.println("Search - name:");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.print(mtPreview());
   display.println("_");
@@ -265,6 +266,7 @@ void showAddNumberScreen() {
   display.setCursor(0, 0);
   display.print("Number for ");
   display.println(tempName);
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(currentInput);
   display.setTextSize(1);

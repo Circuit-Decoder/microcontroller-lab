@@ -175,7 +175,7 @@ void showScreen() {
     display.print(messageCount);
     display.println("):");
     display.drawLine(0, 9, 127, 9, SSD1306_WHITE);
-    display.setCursor(0, 12);
+    display.setCursor(0, 16);                 // row 16: below the yellow strip
     display.println(lastMessage);
     display.setCursor(0, 56);
     display.print("A=Reply  B=Quick OK");

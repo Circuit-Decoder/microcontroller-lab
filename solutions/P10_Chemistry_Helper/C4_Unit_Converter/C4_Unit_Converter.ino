@@ -118,6 +118,7 @@ void showAnswer(double value) {
   display.print(" ");
   display.print(fromUnit[choice]);
   display.println(" =");
+  display.setCursor(0, 16);   // row 16: below the yellow strip
   display.setTextSize(2);
   display.println(convert(choice, value), 2);
   display.setTextSize(1);
