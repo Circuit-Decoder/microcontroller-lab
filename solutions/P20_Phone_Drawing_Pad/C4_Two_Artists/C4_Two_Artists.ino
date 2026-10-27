@@ -4,6 +4,7 @@
 #include <Keypad.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <DNSServer.h>              // the page opens by itself (Project 19)
 #include <WebSocketsServer.h>   // NEW: library "WebSockets" by Markus Sattler
 
 #define SCREEN_WIDTH 128
@@ -27,6 +28,7 @@ const char* AP_PASSWORD = "12345678";
 
 WebServer server(80);               // sends the drawing page
 WebSocketsServer webSocket(81);     // NEW: a live, always-open connection
+DNSServer dns;                      // any address -> the ESP32 (Project 19)
 
 // CHALLENGE 4: one "last point" for EACH phone (client 0 to 4)
 #define MAX_CLIENTS 5
@@ -110,7 +112,12 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
 
   WiFi.softAP(AP_NAME, AP_PASSWORD);
+  dns.start(53, "*", WiFi.softAPIP());
   server.on("/", []() { server.send(200, "text/html", PAGE); });
+  server.onNotFound([]() {            // any other address -> the drawing page
+    server.sendHeader("Location", "http://" + WiFi.softAPIP().toString() + "/");
+    server.send(302, "text/plain", "");
+  });
   server.begin();
   webSocket.begin();
   webSocket.onEvent(onDrawingMessage);   // run this function for every message
@@ -119,6 +126,7 @@ void setup() {
 }
 
 void loop() {
+  dns.processNextRequest();
   server.handleClient();
   webSocket.loop();                   // receive drawing messages
 

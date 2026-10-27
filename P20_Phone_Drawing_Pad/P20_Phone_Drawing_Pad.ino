@@ -4,12 +4,13 @@
 #include <Keypad.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <DNSServer.h>              // the page opens by itself (Project 19)
 #include <WebSocketsServer.h>   // NEW: library "WebSockets" by Markus Sattler
- 
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
- 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -21,18 +22,19 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {13, 12, 14, 27};
 byte colPins[COLS] = {26, 25, 33, 32};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
- 
+
 const char* AP_NAME     = "DrawPad";
 const char* AP_PASSWORD = "12345678";
- 
+
 WebServer server(80);               // sends the drawing page
 WebSocketsServer webSocket(81);     // NEW: a live, always-open connection
- 
+DNSServer dns;                      // any address -> the ESP32 (Project 19)
+
 int lastX = 0, lastY = 0;           // where the finger was last
 bool needsUpdate = false;           // has the drawing changed?
 unsigned long lastShow = 0;
 bool inverted = false;
- 
+
 // ---------- The drawing page (HTML + JavaScript) ----------
 const char PAGE[] = R"rawliteral(
 <!DOCTYPE html>
@@ -59,7 +61,7 @@ const char PAGE[] = R"rawliteral(
   ws.onopen  = function () { document.getElementById('status').textContent = 'Connected - draw!'; };
   ws.onclose = function () { document.getElementById('status').textContent = 'Disconnected'; };
   var drawing = false, lastX = -1, lastY = -1;
- 
+
   // finger position on the canvas -> pixel 0..127, 0..63
   function point(e) {
     var r = pad.getBoundingClientRect();
@@ -97,7 +99,7 @@ const char PAGE[] = R"rawliteral(
 </script>
 </body></html>
 )rawliteral";
- 
+
 void setup() {
   Serial.begin(115200);
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -106,27 +108,33 @@ void setup() {
   }
   Wire.setClock(400000);              // talk to the OLED 4x faster
   display.setTextColor(SSD1306_WHITE);
- 
+
   WiFi.softAP(AP_NAME, AP_PASSWORD);
+  dns.start(53, "*", WiFi.softAPIP());
   server.on("/", []() { server.send(200, "text/html", PAGE); });
+  server.onNotFound([]() {            // any other address -> the drawing page
+    server.sendHeader("Location", "http://" + WiFi.softAPIP().toString() + "/");
+    server.send(302, "text/plain", "");
+  });
   server.begin();
   webSocket.begin();
   webSocket.onEvent(onDrawingMessage);   // run this function for every message
- 
+
   showWelcome();
 }
- 
+
 void loop() {
+  dns.processNextRequest();
   server.handleClient();
   webSocket.loop();                   // receive drawing messages
- 
+
   // Update the OLED at most every 30 ms: fast, but not too often
   if (needsUpdate && millis() - lastShow > 30) {
     display.display();
     needsUpdate = false;
     lastShow = millis();
   }
- 
+
   char key = keypad.getKey();
   if (key == '*') {                   // * = clear
     display.clearDisplay();
@@ -137,7 +145,7 @@ void loop() {
     display.invertDisplay(inverted);
   }
 }
- 
+
 // Called by the WebSocket library whenever the phone sends something
 void onDrawingMessage(uint8_t client, WStype_t type, uint8_t* payload, size_t length) {
   if (type == WStype_CONNECTED) {         // a phone just connected
@@ -146,11 +154,11 @@ void onDrawingMessage(uint8_t client, WStype_t type, uint8_t* payload, size_t le
     return;
   }
   if (type != WStype_TEXT) return;
- 
+
   char command = payload[0];              // 'D', 'M' or 'C'
   int x = 0, y = 0;
   sscanf((char*)payload + 1, "%d %d", &x, &y);   // read the two numbers
- 
+
   if (command == 'D') {                   // pen down: one dot
     display.drawPixel(x, y, SSD1306_WHITE);
   }
@@ -164,7 +172,7 @@ void onDrawingMessage(uint8_t client, WStype_t type, uint8_t* payload, size_t le
   lastY = y;
   needsUpdate = true;
 }
- 
+
 void showWelcome() {
   display.clearDisplay();
   display.setTextSize(1);

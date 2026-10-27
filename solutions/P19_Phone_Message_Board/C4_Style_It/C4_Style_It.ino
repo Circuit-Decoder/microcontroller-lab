@@ -4,6 +4,7 @@
 #include <Keypad.h>
 #include <WiFi.h>
 #include <WebServer.h>          // NEW: turns the ESP32 into a web server
+#include <DNSServer.h>          // NEW: sends every web address to the ESP32
 #include "MultiTap.h"           // our keyboard from Project 13
 
 #define SCREEN_WIDTH 128
@@ -27,6 +28,8 @@ const char* AP_NAME     = "CircuitDecoder";
 const char* AP_PASSWORD = "12345678";      // at least 8 characters
 
 WebServer server(80);           // port 80 = normal web pages
+DNSServer dns;                  // answers "where is ...?" with our address
+int phonesJoined = 0;           // how many phones are on our Wi-Fi
 
 String lastMessage = "";        // the last message from the phone
 int messageCount = 0;
@@ -77,17 +80,26 @@ void setup() {
   mtMaxLength = 40;
 
   WiFi.softAP(AP_NAME, AP_PASSWORD);        // start our own Wi-Fi network
+  dns.start(53, "*", WiFi.softAPIP());      // any address -> the ESP32
 
   server.on("/", handleRoot);               // address  ->  function
   server.on("/send", handleSend);
   server.on("/reply", handleReply);
+  server.onNotFound(handleNotFound);        // any other address -> main page
   server.begin();
 
   showScreen();
 }
 
 void loop() {
+  dns.processNextRequest();                 // answer address questions
   server.handleClient();                    // answer the phone, if it asks
+
+  int n = WiFi.softAPgetStationNum();       // did a phone join or leave?
+  if (n != phonesJoined) {
+    phonesJoined = n;
+    showScreen();
+  }
 
   char key = keypad.getKey();
   if (typingReply) {
@@ -123,6 +135,13 @@ void handleSend() {
   server.send(303);
 }
 
+// Phones check "am I online?" by opening special addresses.
+// We send them to our page, so the phone opens it by itself.
+void handleNotFound() {
+  server.sendHeader("Location", "http://" + WiFi.softAPIP().toString() + "/");
+  server.send(302, "text/plain", "");
+}
+
 void handleReply() {
   server.send(200, "text/plain", reply);
 }
@@ -149,6 +168,9 @@ void showScreen() {
     display.println("");
     display.println("Then open in browser:");
     display.println(WiFi.softAPIP().toString());   // 192.168.4.1
+    display.setCursor(0, 56);
+    display.print("Phones joined: ");
+    display.print(phonesJoined);
   }
   else {
     display.print("Message ");

@@ -4,6 +4,7 @@
 #include <Keypad.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <DNSServer.h>              // the page opens by itself (Project 19)
 #include <WebSocketsServer.h>   // NEW: library "WebSockets" by Markus Sattler
 #include <EEPROM.h>             // CHALLENGE 3: save the drawing
 #define DRAWING_BYTES 1024      // 128 x 64 pixels / 8 pixels per byte
@@ -29,6 +30,7 @@ const char* AP_PASSWORD = "12345678";
 
 WebServer server(80);               // sends the drawing page
 WebSocketsServer webSocket(81);     // NEW: a live, always-open connection
+DNSServer dns;                      // any address -> the ESP32 (Project 19)
 
 int lastX = 0, lastY = 0;           // where the finger was last
 bool needsUpdate = false;           // has the drawing changed?
@@ -111,7 +113,12 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
 
   WiFi.softAP(AP_NAME, AP_PASSWORD);
+  dns.start(53, "*", WiFi.softAPIP());
   server.on("/", []() { server.send(200, "text/html", PAGE); });
+  server.onNotFound([]() {            // any other address -> the drawing page
+    server.sendHeader("Location", "http://" + WiFi.softAPIP().toString() + "/");
+    server.send(302, "text/plain", "");
+  });
   server.begin();
   webSocket.begin();
   webSocket.onEvent(onDrawingMessage);   // run this function for every message
@@ -120,6 +127,7 @@ void setup() {
 }
 
 void loop() {
+  dns.processNextRequest();
   server.handleClient();
   webSocket.loop();                   // receive drawing messages
 
