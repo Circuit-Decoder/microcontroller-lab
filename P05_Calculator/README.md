@@ -1,16 +1,16 @@
-# Project 5: Bill Splitter
+# Project 5: Calculator
 
-**Split a restaurant bill with a tip.**  
+**A real 4-function calculator.**  
 Book: *Microcontroller Lab* by Circuit Decoder — Tier 2 — Maths, science & money
 
 ## Files
 
-- [`P05_Bill_Splitter.ino`](P05_Bill_Splitter.ino)
+- [`P05_Calculator.ino`](P05_Calculator.ino)
 
 ## How to open it
 
 1. Easiest: download the whole repository (green **Code** button → **Download ZIP**) and unzip it.
-2. Double-click `P05_Bill_Splitter.ino`. It opens in the Arduino IDE.
+2. Double-click `P05_Calculator.ino`. It opens in the Arduino IDE.
 3. Or copy the code: open the `.ino` file above and click the **Copy raw file** button (top right of the code).
 
 ## Libraries needed

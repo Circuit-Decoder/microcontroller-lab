@@ -22,7 +22,7 @@ Every solution here has been compiled for the ESP32 (Arduino core 3.0.7) with th
 | [Project 2: Science Reference](P02_Science_Reference) | 4 | Part A: 3 more constants on keys A, B and C; Part B: elements 21 to 30; Part B: a third array for atomic mass; Big challenge: both tools in one program |
 | [Project 3: PIN Lock](P03_PIN_Lock) | 4 | Make the PIN 6 digits long; Show * instead of the real digits; Lock for 10 seconds after 3 wrong tries; Touch PIN (extra hard) |
 | [Project 4: Random Toolkit](P04_Random_Toolkit) | 4 | Roll 2 dice on key 2; Choose the password length (4–9, then D); Random Name Picker; Maths Quiz mode |
-| [Project 5: Smart Calculator & Bill Splitter](P05_Smart_Calculator) | 4 | Show "Cannot divide by 0"; Make * work like a backspace; Show the whole sum, like "12 + 8 = 20"; Bill Splitter: A = 5%, B = 10%, C = 15% |
+| [Project 5: Calculator](P05_Calculator) | 4 + exercise | Exercise: Bill Splitter; Show "Cannot divide by 0"; Make * work like a backspace; Show the whole sum, like "12 + 8 = 20"; Bill Splitter: A = 5%, B = 10%, C = 15% |
 | [Project 6: Number Explorer](P06_Number_Explorer) | 4 | All prime numbers from 1 to 100; Prime factorisation, like 360 = 2 x 2 x 2 x 3 x 3 x 5; Faster factors; Show the next page with A |
 | [Project 7: Quadratic Equation Solver](P07_Quadratic_Solver) | 5 | Show the equation on the result screen; Complex roots p ± qi (HSC); Electricity bill with slabs; Savings growth with compound interest; BMI calculator |
 | [Project 8: Statistics Tool](P08_Statistics_Tool) | 4 | Mode: the value that appears most often; Grade counter; Pass rate; Sort high to low with C |

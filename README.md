@@ -52,8 +52,7 @@ Every program here is exactly the code printed in the book. Each one was compile
 
 | # | Project | What you build |
 |---|---|---|
-| 5 | [Smart Calculator](P05_Smart_Calculator) | A real 4-function calculator |
-| 5 | [Bill Splitter](P05_Bill_Splitter) | Split a restaurant bill with a tip |
+| 5 | [Calculator](P05_Calculator) | A real 4-function calculator, plus a bill-splitter exercise ([solution](solutions/P05_Calculator/Bill_Splitter)) |
 | 6 | [Number Explorer](P06_Number_Explorer) | Prime check, factors, GCD/LCM, even/odd |
 | 7 | [Quadratic Equation Solver](P07_Quadratic_Solver) | Roots of ax² + bx + c = 0, step by step |
 | 8 | [Statistics Tool](P08_Statistics_Tool) | Mean, median and range of your marks — with sorting |
