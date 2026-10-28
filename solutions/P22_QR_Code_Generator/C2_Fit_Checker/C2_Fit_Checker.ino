@@ -49,6 +49,7 @@ void loop() {
   if (showingCode) {                    // any key: back to typing
     if (key) {
       showingCode = false;
+      setBrightness(207);               // normal brightness again
       showTyping();
     }
     return;
@@ -98,17 +99,19 @@ void drawQR(esp_qrcode_handle_t qr) {
   int version = (squares - 17) / 4;             // 21 -> 1, 25 -> 2, 29 -> 3
 
   display.clearDisplay();
+  setBrightness(40);                            // dimmer: less glow, sharper squares
+  int size = squares * SCALE;                   // 42, 50 or 58 pixels
+  int top = 0;
+  if (size <= 44) top = 16;                     // a small code fits below the yellow strip
   // A white square behind the code: phones like dark squares on white
-  display.fillRect(0, 0, 64, 64, SSD1306_WHITE);
-  // CHALLENGE 2: a small code (version 1, 21 squares) gets 3 x 3 pixels = 63 px
-  int scale = SCALE;
-  if (squares == 21) scale = 3;
-  int start = (64 - squares * scale) / 2;       // centre it in the white square
+  display.fillRect(0, top, 64, 64 - top, SSD1306_WHITE);
+  int startX = (64 - size) / 2;                 // centre it in the white square
+  int startY = top + (64 - top - size) / 2;
 
   for (int y = 0; y < squares; y++) {
     for (int x = 0; x < squares; x++) {
       if (esp_qrcode_get_module(qr, x, y)) {    // a dark square?
-        display.fillRect(start + x * scale, start + y * scale, scale, scale, SSD1306_BLACK);
+        display.fillRect(startX + x * SCALE, startY + y * SCALE, SCALE, SCALE, SSD1306_BLACK);
       }
     }
   }
@@ -132,6 +135,12 @@ void drawQR(esp_qrcode_handle_t qr) {
   display.display();
 }
 
+// OLED brightness: 207 = normal, 1 = dimmest
+void setBrightness(byte level) {
+  display.ssd1306_command(SSD1306_SETCONTRAST);
+  display.ssd1306_command(level);
+}
+
 void showTyping() {
   display.clearDisplay();
   display.setTextSize(1);
@@ -140,6 +149,11 @@ void showTyping() {
   display.println("");
   display.print(mtPreview());
   display.println("_");
+  // CHALLENGE 2: will it fit in version 1 (below the yellow strip)?
+  int letters = mtText.length() + (mtActiveKey != 0 ? 1 : 0);
+  display.setCursor(0, 40);
+  if (letters <= 17) display.print("OK - fits");
+  else display.print("TOO LONG");
   display.setCursor(0, 48);
   display.print("#=Make QR  B=WiFi QR");
   display.setCursor(0, 56);

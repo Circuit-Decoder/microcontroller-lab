@@ -39,7 +39,7 @@ Every solution here has been compiled for the ESP32 (Arduino core 3.0.7) with th
 | [Project 19: Phone Message Board](P19_Phone_Message_Board) | 4 | Classroom notice board with a password; Short messages in big letters; Message history with B; Style it |
 | [Project 20: Phone Drawing Pad](P20_Phone_Drawing_Pad) | 4 | Eraser; Thick pen; Save and load a drawing; Two artists at once |
 | [Project 21: Telegram Messenger](P21_Telegram_Messenger) | 5 | A /count command; Doorbell on key C; Remote screen: /invert; Family bot: two allowed chat IDs; Show the time each message arrived |
-| [Project 22: QR Code Maker](P22_QR_Code_Generator) | 4 | Phone number QR; Big mode for short text; QR from the Contact Book; Website QR on key C |
+| [Project 22: QR Code Maker](P22_QR_Code_Generator) | 4 | Phone number QR; Fit checker: OK or TOO LONG; QR from the Contact Book; Website QR on key C |
 | [Project 23: Bluetooth Presentation Remote](P23_Presentation_Remote) | 4 | Time warning; Page Up and Page Down on keys 2 and 8; Typing machine; Laser pointer on key 0 |
 
 ← [Back to all projects](../README.md)

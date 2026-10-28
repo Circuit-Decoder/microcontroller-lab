@@ -10,11 +10,11 @@ Full sketch: [`C1_Contact_QR/C1_Contact_QR.ino`](C1_Contact_QR/C1_Contact_QR.ino
 
 Type a phone number and press A. The code holds `"tel:" + mtText`, so a phone that scans it opens the dialler with the number ready.
 
-## Challenge 2: Big mode for short text
+## Challenge 2: Fit checker: OK or TOO LONG
 
-Full sketch: [`C2_Big_Mode/C2_Big_Mode.ino`](C2_Big_Mode/C2_Big_Mode.ino)
+Full sketch: [`C2_Fit_Checker/C2_Fit_Checker.ino`](C2_Fit_Checker/C2_Fit_Checker.ino)
 
-A version 1 code has 21 squares. 21 × 3 = 63 pixels, so it fits the 64-pixel screen height at 3 × 3 pixels per square. A local variable `scale` is 3 for 21 squares and 2 for the rest. Big squares are easier for old phone cameras.
+Count the letters typed so far (plus the one being chosen) and show "OK - fits" for 17 or fewer, "TOO LONG" for more. 17 letters always fit in version 1, which sits completely below the yellow strip and scans well. (Only capitals, digits and spaces? Then up to 25 still fit — the counter plays it safe.)
 
 ## Challenge 3: QR from the Contact Book
 
@@ -26,6 +26,6 @@ Upload Project 15 first and save some contacts. This sketch uses the same EEPROM
 
 Full sketch: [`C4_Website_QR/C4_Website_QR.ino`](C4_Website_QR/C4_Website_QR.ino)
 
-A fixed text `WEBSITE` is turned into a code when C is pressed. Version 3 holds about 50 letters, so keep the address short.
+A fixed text `WEBSITE` is turned into a code when C is pressed. Keep the address to 17 letters or fewer (like https://nasa.gov), so it is a version 1 code below the yellow strip.
 
 ← [All solutions](../README.md) · [Project code](../../P22_QR_Code_Generator)

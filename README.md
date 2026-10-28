@@ -79,7 +79,7 @@ Every program here is exactly the code printed in the book. Each one was compile
 | 19 | [Phone Message Board](P19_Phone_Message_Board) | Type on your phone, see it on your device |
 | 20 | [Phone Drawing Pad](P20_Phone_Drawing_Pad) | Draw with your finger, see it on the OLED |
 | 21 | [Telegram Messenger](P21_Telegram_Messenger) | Send and receive messages from anywhere |
-| 22 | [QR Code Generator](P22_QR_Code_Generator) | Type text, get a QR code any phone can scan |
+| 22 | [QR Code Generator](P22_QR_Code_Generator) | Type short text, get a QR code your phone can scan |
 | 23 | [Bluetooth Presentation Remote](P23_Presentation_Remote) | Change PowerPoint slides from your device |
 
 ## Challenge solutions
